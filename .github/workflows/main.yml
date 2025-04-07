@@ -18,11 +18,16 @@ jobs:
           username: Fufuhu
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and tag Docker image
+      - name: Get image tag
+        id: get-image-tag
         run: |
           VERSION=$(git rev --short)
-          docker build -t fufuhu/bash_webserver:$VERSION .
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Build and tag Docker image
+        run: |
+          docker build -t fufuhu/bash_webserver:${{ steps.get-image-tag.outputs.version }} .
 
       - name: Push Docker image
         run: |
-          docker push fufuhu/bash_webserver:$VERSION
+          docker push fufuhu/bash_webserver:${{ steps.get-image-tag.outputs.version }} .
