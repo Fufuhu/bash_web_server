@@ -22,7 +22,7 @@ jobs:
       - name: Get image tag
         id: get-image-tag
         run: |
-          VERSION=$(git rev --short)
+          VERSION=$(git rev-parse --short HEAD)
           echo "tag=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Set up Docker Buildx
