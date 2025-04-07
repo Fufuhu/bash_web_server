@@ -22,12 +22,12 @@ jobs:
         id: get-image-tag
         run: |
           VERSION=$(git rev --short)
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "tag=$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Build and tag Docker image
-        run: |
-          docker build -t fufuhu/bash_webserver:${{ steps.get-image-tag.outputs.version }} .
-
-      - name: Push Docker image
-        run: |
-          docker push fufuhu/bash_webserver:${{ steps.get-image-tag.outputs.version }} .
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          dockerfile: Dockerfile
+          image: fufuhu/bash_webserver
+          tags: ${{ steps.get-image-tag.outputs.tag }}
