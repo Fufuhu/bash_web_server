@@ -24,10 +24,16 @@ jobs:
           VERSION=$(git rev --short)
           echo "tag=$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Build and Push Docker Image
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and Push
         uses: docker/build-push-action@v6
         with:
+          push: true
           context: .
-          dockerfile: Dockerfile
+          file: Dockerfile
           image: fufuhu/bash_webserver
-          tags: ${{ steps.get-image-tag.outputs.tag }}
+          tags: |
+            fufuhu/bash_webserver:${{ steps.get-image-tag.outputs.tag }}
+            fufuhu/bash_webserver:latest
